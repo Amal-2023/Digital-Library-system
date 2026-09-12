@@ -1,0 +1,2361 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LibraX — Digital Library Management System</title>
+
+<style>
+/* =========================================================
+   LIBRAX DIGITAL LIBRARY MANAGEMENT SYSTEM
+   SINGLE FILE: HTML + CSS + JAVASCRIPT
+   ========================================================= */
+
+:root{
+    --primary:#6c5ce7;
+    --primary-dark:#5541d9;
+    --secondary:#00cec9;
+    --accent:#fd79a8;
+    --success:#00b894;
+    --warning:#fdcb6e;
+    --danger:#e17055;
+
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+
+    --sidebar:#111827;
+    --sidebar-text:#d1d5db;
+    --shadow:0 12px 35px rgba(17,24,39,.08);
+}
+
+body.dark{
+    --bg:#0f172a;
+    --card:#172033;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --border:#263449;
+    --sidebar:#080d18;
+    --sidebar-text:#cbd5e1;
+    --shadow:0 12px 35px rgba(0,0,0,.25);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    transition:.3s;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    height:100vh;
+    background:var(--sidebar);
+    color:white;
+    padding:25px 16px;
+    z-index:1000;
+    transition:.3s;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:8px 12px 30px;
+}
+
+.logo-icon{
+    width:44px;
+    height:44px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    font-size:23px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    box-shadow:0 8px 20px rgba(108,92,231,.35);
+}
+
+.logo h1{
+    font-size:21px;
+    letter-spacing:.3px;
+}
+
+.logo span{
+    color:#9ca3af;
+    font-size:11px;
+}
+
+.nav-title{
+    color:#64748b;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    padding:10px 13px;
+    margin-top:5px;
+}
+
+.nav-link{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    border:0;
+    background:transparent;
+    color:var(--sidebar-text);
+    padding:13px 14px;
+    border-radius:12px;
+    margin:4px 0;
+    text-align:left;
+    transition:.2s;
+}
+
+.nav-link:hover,
+.nav-link.active{
+    background:rgba(108,92,231,.18);
+    color:white;
+}
+
+.nav-link.active{
+    box-shadow:inset 3px 0 0 var(--primary);
+}
+
+.nav-icon{
+    width:23px;
+    text-align:center;
+}
+
+.sidebar-bottom{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:20px;
+}
+
+.user-box{
+    border:1px solid #273449;
+    border-radius:14px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    display:grid;
+    place-items:center;
+    font-weight:700;
+}
+
+.user-box small{
+    color:#94a3b8;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:76px;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 35px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.menu-btn{
+    display:none;
+    border:0;
+    background:transparent;
+    color:var(--text);
+    font-size:25px;
+}
+
+.top-title h2{
+    font-size:20px;
+}
+
+.top-title p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card);
+    color:var(--text);
+    transition:.2s;
+}
+
+.icon-btn:hover{
+    transform:translateY(-2px);
+    border-color:var(--primary);
+    color:var(--primary);
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    padding:30px 35px 45px;
+    max-width:1500px;
+    margin:auto;
+}
+
+.page{
+    display:none;
+    animation:fadeIn .35s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    min-height:245px;
+    border-radius:24px;
+    padding:35px;
+    color:white;
+    background:
+      radial-gradient(circle at 85% 25%,rgba(0,206,201,.4),transparent 25%),
+      radial-gradient(circle at 65% 90%,rgba(253,121,168,.25),transparent 25%),
+      linear-gradient(135deg,#5541d9,#6c5ce7 55%,#00a8a5);
+    box-shadow:var(--shadow);
+}
+
+.hero:after{
+    content:"";
+    position:absolute;
+    width:280px;
+    height:280px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:50%;
+    right:-90px;
+    top:-80px;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:700px;
+}
+
+.hero .tag{
+    display:inline-block;
+    background:rgba(255,255,255,.15);
+    padding:7px 12px;
+    border-radius:30px;
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.hero h1{
+    font-size:clamp(28px,4vw,43px);
+    line-height:1.1;
+    margin-bottom:12px;
+}
+
+.hero p{
+    opacity:.9;
+    max-width:610px;
+    line-height:1.7;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:0;
+    border-radius:11px;
+    padding:11px 17px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:white;
+}
+
+.btn-white{
+    background:white;
+    color:#5541d9;
+}
+
+.btn-outline{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+}
+
+.btn-danger{
+    background:#fff0ed;
+    color:#d3543c;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin:25px 0;
+}
+
+.stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    border-radius:17px;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.stat-icon{
+    width:50px;
+    height:50px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    font-size:22px;
+    background:rgba(108,92,231,.12);
+}
+
+.stat:nth-child(2) .stat-icon{
+    background:rgba(0,184,148,.12);
+}
+
+.stat:nth-child(3) .stat-icon{
+    background:rgba(253,203,110,.18);
+}
+
+.stat:nth-child(4) .stat-icon{
+    background:rgba(253,121,168,.13);
+}
+
+.stat h3{
+    font-size:25px;
+}
+
+.stat p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+}
+
+/* ================= SECTION ================= */
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin:30px 0 16px;
+}
+
+.section-header h2{
+    font-size:21px;
+}
+
+.section-header p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-area{
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
+}
+
+.search-box{
+    flex:1;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+    padding:0 18px 0 47px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:13px;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(108,92,231,.1);
+}
+
+.search-box span{
+    position:absolute;
+    left:17px;
+    top:14px;
+}
+
+select{
+    height:48px;
+    padding:0 15px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+}
+
+/* ================= BOOK GRID ================= */
+
+.book-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.book-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:.25s;
+    position:relative;
+}
+
+.book-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(17,24,39,.13);
+}
+
+.book-cover{
+    height:190px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    overflow:hidden;
+}
+
+.book-cover:before{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    right:-40px;
+    top:-45px;
+}
+
+.cover-1{background:linear-gradient(135deg,#667eea,#764ba2)}
+.cover-2{background:linear-gradient(135deg,#00b09b,#96c93d)}
+.cover-3{background:linear-gradient(135deg,#ff758c,#ff7eb3)}
+.cover-4{background:linear-gradient(135deg,#396afc,#2948ff)}
+.cover-5{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.cover-6{background:linear-gradient(135deg,#8e2de2,#4a00e0)}
+.cover-7{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.cover-8{background:linear-gradient(135deg,#ee0979,#ff6a00)}
+
+.book-icon{
+    position:relative;
+    z-index:1;
+    font-size:65px;
+    filter:drop-shadow(0 8px 10px rgba(0,0,0,.2));
+}
+
+.favorite{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:35px;
+    height:35px;
+    border:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.92);
+    font-size:17px;
+    z-index:5;
+}
+
+.favorite.active{
+    color:#e84393;
+}
+
+.book-info{
+    padding:17px;
+}
+
+.category{
+    color:var(--primary);
+    background:rgba(108,92,231,.1);
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:7px;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.book-title{
+    font-size:16px;
+    margin:10px 0 6px;
+    line-height:1.35;
+}
+
+.author{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.book-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.book-actions .btn{
+    flex:1;
+    padding:9px 8px;
+    font-size:12px;
+}
+
+/* ================= CATEGORY CARDS ================= */
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.category-card{
+    padding:24px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    transition:.2s;
+}
+
+.category-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--primary);
+}
+
+.category-card .cat-icon{
+    font-size:30px;
+    margin-bottom:13px;
+}
+
+.category-card h3{
+    margin-bottom:5px;
+}
+
+.category-card p{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrap{
+    overflow:auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    box-shadow:var(--shadow);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+th,td{
+    padding:15px 17px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+}
+
+th{
+    color:var(--muted);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+td{
+    font-size:13px;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+.status{
+    display:inline-block;
+    padding:6px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.status.available{
+    background:#e9fbf5;
+    color:#009d7c;
+}
+
+.status.popular{
+    background:#fff7e4;
+    color:#bd8100;
+}
+
+/* ================= ABOUT ================= */
+
+.about{
+    display:grid;
+    grid-template-columns:1.3fr .7fr;
+    gap:22px;
+}
+
+.info-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:28px;
+    box-shadow:var(--shadow);
+}
+
+.info-card h2{
+    margin-bottom:12px;
+}
+
+.info-card p{
+    color:var(--muted);
+    line-height:1.8;
+    font-size:14px;
+}
+
+.feature-list{
+    margin-top:20px;
+    display:grid;
+    gap:12px;
+}
+
+.feature{
+    display:flex;
+    gap:11px;
+    align-items:center;
+    color:var(--text);
+    font-size:13px;
+}
+
+.feature span{
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    background:rgba(108,92,231,.1);
+    border-radius:9px;
+}
+
+/* ================= MODAL ================= */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    backdrop-filter:blur(5px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+    padding:20px;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal{
+    width:min(620px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:var(--card);
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 25px 80px rgba(0,0,0,.25);
+    animation:modalIn .25s ease;
+}
+
+@keyframes modalIn{
+    from{transform:scale(.94);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    font-size:25px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:12px;
+    font-weight:600;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    height:45px;
+    padding:0 12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:var(--primary);
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#111827;
+    color:white;
+    padding:13px 18px;
+    border-radius:12px;
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+    transform:translateY(100px);
+    opacity:0;
+    transition:.3s;
+    z-index:3000;
+    font-size:13px;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:55px 20px;
+    background:var(--card);
+    border:1px dashed var(--border);
+    border-radius:18px;
+}
+
+.empty-icon{
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+.empty p{
+    color:var(--muted);
+    margin-top:5px;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    text-align:center;
+    color:var(--muted);
+    padding:30px 0 5px;
+    font-size:12px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+    .book-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .category-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:900px){
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .topbar{
+        padding:0 18px;
+    }
+
+    .content{
+        padding:20px 18px 35px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .book-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .about{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+    .top-title p{
+        display:none;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .book-grid,
+    .category-grid{
+        grid-template-columns:1fr;
+    }
+
+    .search-area{
+        flex-direction:column;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">📚</div>
+        <div>
+            <h1>Digital Vista</h1>
+            <span>Digital Library System</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Main Menu</div>
+
+    <button class="nav-link active" data-page="dashboard">
+        <span class="nav-icon">🏠</span>
+        Dashboard
+    </button>
+
+    <button class="nav-link" data-page="books">
+        <span class="nav-icon">📚</span>
+        All Books
+    </button>
+
+    <button class="nav-link" data-page="favorites">
+        <span class="nav-icon">❤️</span>
+        Favorites
+    </button>
+
+    <button class="nav-link" data-page="categories">
+        <span class="nav-icon">🗂️</span>
+        Categories
+    </button>
+
+    <div class="nav-title">Library</div>
+
+    <button class="nav-link" id="addBookNav">
+        <span class="nav-icon">➕</span>
+        Add New Book
+    </button>
+
+    <button class="nav-link" data-page="catalog">
+        <span class="nav-icon">📋</span>
+        Catalog
+    </button>
+
+    <button class="nav-link" data-page="about">
+        <span class="nav-icon">ℹ️</span>
+        About Library
+    </button>
+
+    <div class="sidebar-bottom">
+        <div class="user-box">
+            <div class="avatar">AK</div>
+            <div>
+                <strong>Amal</strong>
+                <br>
+                <small>Administrator</small>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div style="display:flex;align-items:center;gap:12px;">
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <div class="top-title">
+            <h2 id="pageTitle">Dashboard</h2>
+            <p>Manage and explore your digital library</p>
+        </div>
+    </div>
+
+    <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
+        <button class="icon-btn" id="topAddBtn" title="Add book">＋</button>
+    </div>
+
+</header>
+
+<div class="content">
+
+<!-- ================= DASHBOARD ================= -->
+
+<section class="page active" id="dashboard">
+
+    <div class="hero">
+
+        <div class="hero-content">
+
+            <span class="tag">✦ SMART DIGITAL LIBRARY</span>
+
+            <h1>Discover knowledge.<br>Explore unlimited books.</h1>
+
+            <p>
+                Welcome to LibraX — a modern digital library management
+                system designed to help you discover, organize and access
+                books from trusted online sources.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn btn-white" onclick="showPage('books')">
+                    📚 Explore Books
+                </button>
+
+                <button class="btn" style="background:rgba(255,255,255,.15);color:white"
+                        onclick="openAddModal()">
+                    ＋ Add Book
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-icon">📚</div>
+            <div>
+                <h3 id="totalBooks">0</h3>
+                <p>Total Books</p>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">🟢</div>
+            <div>
+                <h3 id="availableBooks">0</h3>
+                <p>Available Online</p>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">❤️</div>
+            <div>
+                <h3 id="favoriteBooks">0</h3>
+                <p>Favorites</p>
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">🗂️</div>
+            <div>
+                <h3 id="categoryCount">0</h3>
+                <p>Categories</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section-header">
+        <div>
+            <h2>Featured Books</h2>
+            <p>Popular books available through trusted digital libraries</p>
+        </div>
+
+        <button class="btn btn-outline" onclick="showPage('books')">
+            View All →
+        </button>
+    </div>
+
+    <div class="book-grid" id="featuredGrid"></div>
+
+</section>
+
+<!-- ================= BOOKS ================= -->
+
+<section class="page" id="books">
+
+    <div class="section-header">
+        <div>
+            <h2>Book Collection</h2>
+            <p>Search and explore the complete digital collection</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openAddModal()">
+            ＋ Add Book
+        </button>
+    </div>
+
+    <div class="search-area">
+
+        <div class="search-box">
+            <span>🔎</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by title, author or category..."
+            >
+        </div>
+
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+        </select>
+
+    </div>
+
+    <div class="book-grid" id="bookGrid"></div>
+
+</section>
+
+<!-- ================= FAVORITES ================= -->
+
+<section class="page" id="favorites">
+
+    <div class="section-header">
+        <div>
+            <h2>My Favorites</h2>
+            <p>Your saved books</p>
+        </div>
+    </div>
+
+    <div class="book-grid" id="favoriteGrid"></div>
+
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+
+<section class="page" id="categories">
+
+    <div class="section-header">
+        <div>
+            <h2>Browse Categories</h2>
+            <p>Explore books according to subject</p>
+        </div>
+    </div>
+
+    <div class="category-grid" id="categoryGrid"></div>
+
+</section>
+
+<!-- ================= CATALOG ================= -->
+
+<section class="page" id="catalog">
+
+    <div class="section-header">
+        <div>
+            <h2>Library Catalog</h2>
+            <p>A quick overview of your collection</p>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="catalogBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<!-- ================= ABOUT ================= -->
+
+<section class="page" id="about">
+
+    <div class="section-header">
+        <div>
+            <h2>About LibraX</h2>
+            <p>Digital Library Management System</p>
+        </div>
+    </div>
+
+    <div class="about">
+
+        <div class="info-card">
+
+            <h2>📚 About the System</h2>
+
+            <p>
+                LibraX is a front-end digital library management system
+                created to provide a clean and professional interface for
+                managing and discovering digital books.
+            </p>
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <span>🔎</span>
+                    Smart book search
+                </div>
+
+                <div class="feature">
+                    <span>❤️</span>
+                    Personal favorites
+                </div>
+
+                <div class="feature">
+                    <span>🔗</span>
+                    Direct online book access
+                </div>
+
+                <div class="feature">
+                    <span>💾</span>
+                    Browser-based data storage
+                </div>
+
+                <div class="feature">
+                    <span>🌙</span>
+                    Dark and light themes
+                </div>
+
+                <div class="feature">
+                    <span>📱</span>
+                    Responsive design
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="info-card">
+
+            <h2>✨ Features</h2>
+
+            <p>
+                This single-file project uses HTML, CSS and JavaScript.
+                No external framework or server is required for the
+                basic library interface.
+            </p>
+
+            <br>
+
+            <p>
+                Book links are directed to legitimate online sources
+                where the selected book can be accessed.
+            </p>
+
+            <br>
+
+            <strong>Version 1.0</strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+<div class="footer">
+    © 2026 LibraX Digital Library Management System · Built with HTML, CSS & JavaScript
+</div>
+
+</div>
+</main>
+
+
+<!-- ================= ADD BOOK MODAL ================= -->
+
+<div class="modal-overlay" id="addModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <div>
+                <h2>Add New Book</h2>
+                <p style="color:var(--muted);font-size:12px;margin-top:4px;">
+                    Add a book to your digital collection
+                </p>
+            </div>
+
+            <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <form id="addBookForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input id="newTitle" required placeholder="e.g. The Great Gatsby">
+                </div>
+
+                <div class="form-group">
+                    <label>Author</label>
+                    <input id="newAuthor" required placeholder="e.g. F. Scott Fitzgerald">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="newCategory">
+                        <option>Literature</option>
+                        <option>Science</option>
+                        <option>Technology</option>
+                        <option>History</option>
+                        <option>Philosophy</option>
+                        <option>Education</option>
+                        <option>Psychology</option>
+                        <option>Fiction</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Year</label>
+                    <input id="newYear" type="number" placeholder="2026">
+                </div>
+
+                <div class="form-group full">
+                    <label>Online Book URL</label>
+                    <input id="newUrl" type="url"
+                           placeholder="https://example.com/book">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-outline"
+                        onclick="closeModal()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    Add Book
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ================= BOOK DETAILS MODAL ================= -->
+
+<div class="modal-overlay" id="detailsModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2 id="detailsTitle">Book Details</h2>
+            <button class="close" onclick="closeDetails()">×</button>
+        </div>
+
+        <div id="detailsContent"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   LIBRARY DATA
+   ========================================================= */
+
+const defaultBooks = [
+
+{
+    id:1,
+    title:"Pride and Prejudice",
+    author:"Jane Austen",
+    category:"Literature",
+    year:1813,
+    cover:"cover-1",
+    icon:"📕",
+    url:"https://www.gutenberg.org/ebooks/1342",
+    favorite:false
+},
+
+{
+    id:2,
+    title:"The Adventures of Sherlock Holmes",
+    author:"Arthur Conan Doyle",
+    category:"Fiction",
+    year:1892,
+    cover:"cover-2",
+    icon:"🔎",
+    url:"https://www.gutenberg.org/ebooks/1661",
+    favorite:false
+},
+
+{
+    id:3,
+    title:"Alice's Adventures in Wonderland",
+    author:"Lewis Carroll",
+    category:"Fiction",
+    year:1865,
+    cover:"cover-3",
+    icon:"🎩",
+    url:"https://www.gutenberg.org/ebooks/11",
+    favorite:false
+},
+
+{
+    id:4,
+    title:"The Time Machine",
+    author:"H. G. Wells",
+    category:"Science",
+    year:1895,
+    cover:"cover-4",
+    icon:"⏳",
+    url:"https://www.gutenberg.org/ebooks/35",
+    favorite:false
+},
+
+{
+    id:5,
+    title:"Frankenstein",
+    author:"Mary Shelley",
+    category:"Fiction",
+    year:1818,
+    cover:"cover-5",
+    icon:"⚡",
+    url:"https://www.gutenberg.org/ebooks/84",
+    favorite:false
+},
+
+{
+    id:6,
+    title:"The Republic",
+    author:"Plato",
+    category:"Philosophy",
+    year:-380,
+    cover:"cover-6",
+    icon:"🏛️",
+    url:"https://www.gutenberg.org/ebooks/1497",
+    favorite:false
+},
+
+{
+    id:7,
+    title:"A Brief History of Time",
+    author:"Stephen Hawking",
+    category:"Science",
+    year:1988,
+    cover:"cover-7",
+    icon:"🌌",
+    url:"https://openlibrary.org/search?q=A+Brief+History+of+Time+Stephen+Hawking",
+    favorite:false
+},
+
+{
+    id:8,
+    title:"The Prince",
+    author:"Niccolò Machiavelli",
+    category:"History",
+    year:1532,
+    cover:"cover-8",
+    icon:"👑",
+    url:"https://www.gutenberg.org/ebooks/1232",
+    favorite:false
+}
+
+];
+
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+let books = JSON.parse(localStorage.getItem("libraxBooks"));
+
+if(!books){
+    books = defaultBooks;
+    saveBooks();
+}
+
+function saveBooks(){
+    localStorage.setItem("libraxBooks",JSON.stringify(books));
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+   ========================================================= */
+
+const pageNames = {
+    dashboard:"Dashboard",
+    books:"All Books",
+    favorites:"Favorites",
+    categories:"Categories",
+    catalog:"Library Catalog",
+    about:"About Library"
+};
+
+document.querySelectorAll(".nav-link[data-page]").forEach(link=>{
+
+    link.addEventListener("click",()=>{
+
+        showPage(link.dataset.page);
+
+        document.querySelectorAll(".nav-link").forEach(x=>{
+            x.classList.remove("active");
+        });
+
+        link.classList.add("active");
+
+        document.getElementById("sidebar").classList.remove("open");
+
+    });
+
+});
+
+
+function showPage(page){
+
+    document.querySelectorAll(".page").forEach(p=>{
+        p.classList.remove("active");
+    });
+
+    const target=document.getElementById(page);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+    document.getElementById("pageTitle").textContent =
+        pageNames[page] || "Library";
+
+    window.scrollTo({top:0,behavior:"smooth"});
+
+    if(page==="books"){
+        renderBooks();
+    }
+
+    if(page==="favorites"){
+        renderFavorites();
+    }
+
+    if(page==="categories"){
+        renderCategories();
+    }
+
+    if(page==="catalog"){
+        renderCatalog();
+    }
+}
+
+
+/* =========================================================
+   BOOK CARD
+   ========================================================= */
+
+function bookCard(book){
+
+    return `
+
+    <div class="book-card">
+
+        <div class="book-cover ${book.cover || "cover-1"}">
+
+            <button
+                class="favorite ${book.favorite ? "active":""}"
+                onclick="toggleFavorite(${book.id})"
+                title="Favorite">
+                ${book.favorite ? "♥":"♡"}
+            </button>
+
+            <div class="book-icon">
+                ${book.icon || "📖"}
+            </div>
+
+        </div>
+
+        <div class="book-info">
+
+            <span class="category">
+                ${escapeHTML(book.category)}
+            </span>
+
+            <h3 class="book-title">
+                ${escapeHTML(book.title)}
+            </h3>
+
+            <p class="author">
+                By ${escapeHTML(book.author)}
+            </p>
+
+            <div class="book-actions">
+
+                <button
+                    class="btn btn-outline"
+                    onclick="showDetails(${book.id})">
+                    Details
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openBook(${book.id})">
+                    Read ↗
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
+}
+
+
+/* =========================================================
+   RENDER BOOKS
+   ========================================================= */
+
+function renderBooks(){
+
+    const grid=document.getElementById("bookGrid");
+
+    const search=document.getElementById("searchInput").value
+        .toLowerCase().trim();
+
+    const category=document.getElementById("categoryFilter").value;
+
+    const filtered=books.filter(book=>{
+
+        const matchesSearch =
+            book.title.toLowerCase().includes(search) ||
+            book.author.toLowerCase().includes(search) ||
+            book.category.toLowerCase().includes(search);
+
+        const matchesCategory =
+            category==="all" || book.category===category;
+
+        return matchesSearch && matchesCategory;
+
+    });
+
+    if(filtered.length===0){
+
+        grid.innerHTML=`
+
+            <div class="empty">
+
+                <div class="empty-icon">📚</div>
+
+                <h3>No books found</h3>
+
+                <p>
+                    Try another search or category.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+    grid.innerHTML=filtered.map(bookCard).join("");
+}
+
+
+/* =========================================================
+   FEATURED BOOKS
+   ========================================================= */
+
+function renderFeatured(){
+
+    const grid=document.getElementById("featuredGrid");
+
+    grid.innerHTML=books
+        .slice(0,4)
+        .map(bookCard)
+        .join("");
+
+}
+
+
+/* =========================================================
+   FAVORITES
+   ========================================================= */
+
+function renderFavorites(){
+
+    const grid=document.getElementById("favoriteGrid");
+
+    const favorites=books.filter(book=>book.favorite);
+
+    if(favorites.length===0){
+
+        grid.innerHTML=`
+
+        <div class="empty">
+
+            <div class="empty-icon">♡</div>
+
+            <h3>No favorite books yet</h3>
+
+            <p>
+                Click the heart icon on a book to save it here.
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+    grid.innerHTML=favorites.map(bookCard).join("");
+
+}
+
+
+/* =========================================================
+   TOGGLE FAVORITE
+   ========================================================= */
+
+function toggleFavorite(id){
+
+    const book=books.find(b=>b.id===id);
+
+    if(!book)return;
+
+    book.favorite=!book.favorite;
+
+    saveBooks();
+
+    updateStats();
+
+    renderFeatured();
+    renderBooks();
+    renderFavorites();
+
+    showToast(
+        book.favorite
+        ? "Added to favorites ❤️"
+        : "Removed from favorites"
+    );
+}
+
+
+/* =========================================================
+   CATEGORIES
+   ========================================================= */
+
+function getCategories(){
+
+    return [...new Set(
+        books.map(book=>book.category)
+    )].sort();
+
+}
+
+
+function renderCategoryFilter(){
+
+    const select=document.getElementById("categoryFilter");
+
+    const current=select.value;
+
+    select.innerHTML=
+        `<option value="all">All Categories</option>`+
+        getCategories()
+        .map(cat=>`<option value="${escapeHTML(cat)}">${escapeHTML(cat)}</option>`)
+        .join("");
+
+    if(getCategories().includes(current)){
+        select.value=current;
+    }
+
+}
+
+
+function renderCategories(){
+
+    const grid=document.getElementById("categoryGrid");
+
+    const icons={
+        Literature:"📜",
+        Science:"🔬",
+        Technology:"💻",
+        History:"🏛️",
+        Philosophy:"🧠",
+        Education:"🎓",
+        Psychology:"🧩",
+        Fiction:"📖"
+    };
+
+    const categories=getCategories();
+
+    grid.innerHTML=categories.map(cat=>{
+
+        const count=books.filter(
+            b=>b.category===cat
+        ).length;
+
+        return `
+
+        <div class="category-card"
+             onclick="filterCategory('${escapeHTML(cat)}')"
+             style="cursor:pointer">
+
+            <div class="cat-icon">
+                ${icons[cat] || "📚"}
+            </div>
+
+            <h3>${escapeHTML(cat)}</h3>
+
+            <p>${count} book${count!==1?"s":""} available</p>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+function filterCategory(category){
+
+    showPage("books");
+
+    document.getElementById("categoryFilter").value=category;
+
+    renderBooks();
+
+}
+
+
+/* =========================================================
+   CATALOG
+   ========================================================= */
+
+function renderCatalog(){
+
+    const tbody=document.getElementById("catalogBody");
+
+    tbody.innerHTML=books.map((book,index)=>`
+
+        <tr>
+
+            <td>${index+1}</td>
+
+            <td>
+                <strong>${escapeHTML(book.title)}</strong>
+            </td>
+
+            <td>${escapeHTML(book.author)}</td>
+
+            <td>${escapeHTML(book.category)}</td>
+
+            <td>
+                <span class="status available">
+                    Available
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-primary"
+                    style="padding:7px 10px;font-size:11px"
+                    onclick="openBook(${book.id})">
+                    Open
+                </button>
+
+            </td>
+
+        </tr>
+
+    `).join("");
+
+}
+
+
+/* =========================================================
+   BOOK DETAILS
+   ========================================================= */
+
+function showDetails(id){
+
+    const book=books.find(b=>b.id===id);
+
+    if(!book)return;
+
+    document.getElementById("detailsTitle").textContent=book.title;
+
+    document.getElementById("detailsContent").innerHTML=`
+
+        <div style="
+            display:flex;
+            gap:20px;
+            align-items:center;
+            margin-bottom:22px;
+        ">
+
+            <div class="book-cover ${book.cover || "cover-1"}"
+                 style="
+                    width:130px;
+                    height:165px;
+                    flex-shrink:0;
+                    border-radius:15px;
+                 ">
+
+                <div class="book-icon">
+                    ${book.icon || "📖"}
+                </div>
+
+            </div>
+
+            <div>
+
+                <span class="category">
+                    ${escapeHTML(book.category)}
+                </span>
+
+                <h2 style="margin:10px 0 5px">
+                    ${escapeHTML(book.title)}
+                </h2>
+
+                <p style="color:var(--muted)">
+                    By ${escapeHTML(book.author)}
+                </p>
+
+                <p style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:8px;
+                ">
+                    Published: ${book.year || "N/A"}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div style="
+            background:var(--bg);
+            border-radius:13px;
+            padding:16px;
+            margin-bottom:18px;
+        ">
+
+            <strong>Online Access</strong>
+
+            <p style="
+                color:var(--muted);
+                font-size:12px;
+                line-height:1.6;
+                margin-top:6px;
+            ">
+                Use the button below to open the book at its
+                online source.
+            </p>
+
+        </div>
+
+        <div style="
+            display:flex;
+            gap:10px;
+            justify-content:flex-end;
+        ">
+
+            <button class="btn btn-outline"
+                    onclick="toggleFavorite(${book.id});closeDetails()">
+                ${book.favorite ? "♥ Remove Favorite":"♡ Add Favorite"}
+            </button>
+
+            <button class="btn btn-primary"
+                    onclick="openBook(${book.id})">
+                Read / Open Book ↗
+            </button>
+
+        </div>
+
+    `;
+
+    document.getElementById("detailsModal")
+        .classList.add("show");
+
+}
+
+
+function closeDetails(){
+
+    document.getElementById("detailsModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   OPEN BOOK
+   ========================================================= */
+
+function openBook(id){
+
+    const book=books.find(b=>b.id===id);
+
+    if(!book)return;
+
+    if(!book.url){
+
+        showToast("No online link has been added for this book.");
+
+        return;
+    }
+
+    window.open(book.url,"_blank");
+
+}
+
+
+/* =========================================================
+   ADD BOOK
+   ========================================================= */
+
+function openAddModal(){
+
+    document.getElementById("addModal")
+        .classList.add("show");
+
+}
+
+
+function closeModal(){
+
+    document.getElementById("addModal")
+        .classList.remove("show");
+
+    document.getElementById("addBookForm").reset();
+
+}
+
+
+document.getElementById("addBookForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const title=document.getElementById("newTitle").value.trim();
+    const author=document.getElementById("newAuthor").value.trim();
+    const category=document.getElementById("newCategory").value;
+    const year=document.getElementById("newYear").value;
+    const url=document.getElementById("newUrl").value.trim();
+
+    if(!title || !author){
+
+        showToast("Please enter title and author.");
+
+        return;
+    }
+
+    const newBook={
+
+        id:Date.now(),
+
+        title:title,
+
+        author:author,
+
+        category:category,
+
+        year:year || "N/A",
+
+        cover:
+            "cover-"+(Math.floor(Math.random()*8)+1),
+
+        icon:"📖",
+
+        url:url || "https://openlibrary.org/search?q="+
+            encodeURIComponent(title+" "+author),
+
+        favorite:false
+
+    };
+
+    books.unshift(newBook);
+
+    saveBooks();
+
+    closeModal();
+
+    updateEverything();
+
+    showPage("books");
+
+    showToast("Book added successfully 📚");
+
+});
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+function updateStats(){
+
+    document.getElementById("totalBooks").textContent=
+        books.length;
+
+    document.getElementById("availableBooks").textContent=
+        books.filter(b=>b.url).length;
+
+    document.getElementById("favoriteBooks").textContent=
+        books.filter(b=>b.favorite).length;
+
+    document.getElementById("categoryCount").textContent=
+        getCategories().length;
+
+}
+
+
+/* =========================================================
+   UPDATE EVERYTHING
+   ========================================================= */
+
+function updateEverything(){
+
+    updateStats();
+
+    renderCategoryFilter();
+
+    renderFeatured();
+
+    renderBooks();
+
+    renderFavorites();
+
+    renderCategories();
+
+    renderCatalog();
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+document.getElementById("searchInput")
+.addEventListener("input",renderBooks);
+
+document.getElementById("categoryFilter")
+.addEventListener("change",renderBooks);
+
+
+/* =========================================================
+   THEME
+   ========================================================= */
+
+const savedTheme=localStorage.getItem("libraxTheme");
+
+if(savedTheme==="dark"){
+
+    document.body.classList.add("dark");
+
+    document.getElementById("themeBtn").textContent="☀️";
+
+}
+
+
+document.getElementById("themeBtn")
+.addEventListener("click",()=>{
+
+    document.body.classList.toggle("dark");
+
+    const dark=document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "libraxTheme",
+        dark ? "dark":"light"
+    );
+
+    document.getElementById("themeBtn").textContent=
+        dark ? "☀️":"🌙";
+
+});
+
+
+/* =========================================================
+   MOBILE SIDEBAR
+   ========================================================= */
+
+document.getElementById("menuBtn")
+.addEventListener("click",()=>{
+
+    document.getElementById("sidebar")
+        .classList.toggle("open");
+
+});
+
+
+/* =========================================================
+   ADD BUTTONS
+   ========================================================= */
+
+document.getElementById("addBookNav")
+.addEventListener("click",()=>{
+
+    openAddModal();
+
+});
+
+
+document.getElementById("topAddBtn")
+.addEventListener("click",()=>{
+
+    openAddModal();
+
+});
+
+
+/* =========================================================
+   MODAL OUTSIDE CLICK
+   ========================================================= */
+
+document.getElementById("addModal")
+.addEventListener("click",function(e){
+
+    if(e.target===this){
+        closeModal();
+    }
+
+});
+
+
+document.getElementById("detailsModal")
+.addEventListener("click",function(e){
+
+    if(e.target===this){
+        closeDetails();
+    }
+
+});
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast=document.getElementById("toast");
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+
+/* =========================================================
+   SECURITY / HTML ESCAPING
+   ========================================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+updateEverything();
+
+</script>
+
+</body>
+</html>
